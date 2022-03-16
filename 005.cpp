@@ -1,9 +1,7 @@
 #include <bits/stdc++.h>
 
-// 001 How many Ways?
-// https://onlinejudge.u-aizu.ac.jp/courses/lesson/2/ITP1/7/ITP1_7_B
-
-// O(N^2)で頑張った
+// 005 Half and Half
+// https://atcoder.jp/contests/abc095/tasks/arc096_a
 
 using namespace std;
 #define all(a) a.begin(), a.end()
@@ -40,21 +38,15 @@ using vs = vector<string>;
 
 signed main()
 {
-    while (1)
+    int a, b, c, x, y;
+    cin >> a >> b >> c >> x >> y;
+    int ans = LONG_LONG_MAX;
+    rrep(ab, 0, 2 * max(x, y) + 1, 2)
     {
-        int n, x;
-        cin >> n >> x;
-        if (n == 0 and x == 0)
-            break;
-        int ans = 0;
-        rep(i, 1, n + 1) rep(j, i + 1, n + 1)
-        {
-            int cp = x;
-            cp -= i + j;
-            if (j + 1 <= cp and cp <= n)
-                ans++;
-        }
-
-        cout << ans << newl;
+        int sum = ab * c;
+        sum += max(0LL, x - ab / 2) * a;
+        sum += max(0LL, y - ab / 2) * b;
+        chmin(ans, sum);
     }
+    cout << ans << newl;
 }
