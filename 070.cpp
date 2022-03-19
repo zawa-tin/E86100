@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
-// 070 素因数分解
-// https://onlinejudge.u-aizu.ac.jp/courses/library/6/NTL/1/NTL_1_A
+// 068 べき乗
+// https://onlinejudge.u-aizu.ac.jp/courses/library/6/NTL/1/NTL_1_B
 
 // clang-format off
 
@@ -38,28 +38,15 @@ using vvll = vector<vll>;
 using vp = vector<pair<int, int>>;
 using vs = vector<string>;
 
-vi res;
-
-void solve(int x) {
-    bool ok = true;
-    while (ok) {
-        int prev = x;
-        for (int i = 2 ; i * i <= x ; i++) if (x % i == 0) {
-            res.push_back(i);
-            x /= i;
-            break;
-        }
-        if (x == prev) ok = false;
-    }
-    if (x != 1) res.push_back(x);
-}
+int mod = 1000000007;
 
 signed main() {
-    int n; cin >> n;
-
-    solve(n);
-    
-    cout << n << ":";
-    fore(x, res) cout << " " << x;
-    cout << newl;
+    int n, m; cin >> n >> m;
+    ll res = 1;
+    while (m > 0) {
+        if (m & 1) res = res * n % mod;
+        n = n * n % mod;
+        m >>= 1;
+    }
+    cout << res << newl;
 }
