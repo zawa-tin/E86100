@@ -1,7 +1,7 @@
 #include <bits/stdc++.h>
 
-// 029 島はいくつある?
-// https://onlinejudge.u-aizu.ac.jp/challenges/sources/ICPC/Prelim/1160?year=2009
+// 029 幅優先探索
+// https://atcoder.jp/contests/abc007/tasks/abc007_3
 
 // clang-format off
 
@@ -38,62 +38,37 @@ using vvll = vector<vll>;
 using vp = vector<pair<int, int>>;
 using vs = vector<string>;
 
+vector<string> grid;
+int r, c;
 
-int w, h;
-vvi grid;
-vvi used;
+void search(int y, int x, int oy, int ox, queue<pair<int, int>>& que, vvi& dist) {
+    if (dist[oy][ox] != 0) return;
+    dist[oy][ox] = dist[y][x] + 1;
+    que.push(make_pair(oy, ox));
+}
 
-int cnt = 0;
-
-void dfs(int x, int y) {
-    // cout << w << " " << h << newl;
-    assert(x >= 0 and x < w and y >= 0 and y < h);
-    if (used[y][x] == 1) return;
-    used[y][x] = 1;
-    // 上
-    if (y > 0) if (grid[y - 1][x] == 1) dfs(x, y - 1);
-    // 右上
-    if (x < w - 1 and y > 0) if (grid[y - 1][x + 1] == 1) dfs(x + 1, y - 1);
-    // 右
-    if (x < w - 1) if (grid[y][x + 1] == 1) dfs(x + 1, y);
-    // 右下
-    if (x < w - 1 and y < h - 1) if (grid[y + 1][x + 1] == 1) dfs(x + 1, y + 1);
-    // 下
-    if (y < h - 1) if (grid[y + 1][x] == 1) dfs(x, y + 1);
-    // 左下
-    if (x > 0 and y < h - 1) if (grid[y + 1][x - 1] == 1) dfs(x - 1, y + 1);
-    // 左
-    if (x > 0) if (grid[y][x - 1] == 1) dfs(x - 1, y);
-    // 左上
-    if (x > 0 and y > 0) if (grid[y - 1][x - 1] == 1) dfs(x - 1, y - 1);
+int bfs(int sy, int sx, int gy, int gx) {
+    vvi dist(r, vi(c));
+    fore(y, dist) fore(x, y) x = 0;
+    queue<pair<int, int>> que;
+    que.push(make_pair(sy, sx));
+    while(!que.empty()) {
+        int y = que.front().first;
+        int x = que.front().second;
+        que.pop();
+        if (y > 0 and grid[y - 1][x] == '.') search(y, x, y - 1, x, que, dist);
+        if (x > 0 and grid[y][x - 1] == '.') search(y, x, y, x - 1, que, dist);
+        if (y < r - 1 and grid[y + 1][x] == '.') search(y, x, y + 1, x, que, dist);
+        if (x < c - 1 and grid[y][x + 1] == '.') search(y, x, y, x + 1, que, dist);
+    }
+    return dist[gy][gx];
 }
 
 signed main() {
-    while(1) {
-        cin >> w >> h;
-        if (w == 0 and h == 0) return 0;
-        used.resize(0);
-        rep(y, h) {
-            vi tmp;
-            rep(x, w) tmp.push_back(0);
-            used.push_back(tmp);
-        }
-        grid.resize(0);
-        rep(y, h) {
-            vi tmp;
-            rep(x, w) {
-                int val; cin >> val;
-                tmp.push_back(val);
-            }
-            grid.push_back(tmp);
-        }
-        int ans = 0;
-        rep(x, w) rep(y, h) if (used[y][x] == 0 and grid[y][x] == 1) {
-            ans++;
-            // cout << x << "a" << y << newl;
-            dfs(x, y);
-        }
-        cout << ans << newl;
-        // cout << newl;
-    }
+    cin >> r >> c;
+    int sy, sx; cin >> sy >> sx;
+    int gy, gx; cin >> gy >> gx;
+    grid.resize(r);
+    fore(y, grid) cin >> y;
+    cout << bfs(sy - 1, sx - 1, gy - 1, gx - 1) << newl;
 }
